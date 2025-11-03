@@ -6,7 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import axios from "axios";
+import axiosInstance from "@/lib/axios";
+import axios from "axios"; // Keep for axios.isAxiosError
 
 interface LoginForm {
   email: string;
@@ -27,10 +28,10 @@ export default function Login() {
     setIsLoading(true);
     
     try {
-      const result = await axios.post(`${import.meta.env.VITE_API_URL}/user/login`, data);
+      const result = await axiosInstance.post('/user/login', data);
       
       toast.success(result.data?.data?.message || 'Login successful!');
-      navigate("/");
+      navigate("/info");
     } catch (error) {
       const errorMessage = axios.isAxiosError(error) && error.response?.data?.message 
         ? error.response.data.message 

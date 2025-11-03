@@ -6,7 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import axios from "axios";
+import axiosInstance from "@/lib/axios";
+import axios from "axios"; // Keep for axios.isAxiosError
 
 
 interface SignUpForm {
@@ -34,7 +35,7 @@ export default function SignUp() {
     setIsLoading(true);
     
     try {
-      const result = await axios.post(`${import.meta.env.VITE_API_URL}/user/register`, {
+      const result = await axiosInstance.post('/user/register', {
         first_name: data.firstName,
         last_name: data.lastName,
         email: data.email,
