@@ -31,6 +31,7 @@ export default function Login() {
       const result = await axiosInstance.post('/user/login', data);
       
       toast.success(result.data?.data?.message || 'Login successful!');
+      localStorage.setItem('refreshToken', result.data?.data?.refreshToken);
       navigate("/info");
     } catch (error) {
       const errorMessage = axios.isAxiosError(error) && error.response?.data?.message 

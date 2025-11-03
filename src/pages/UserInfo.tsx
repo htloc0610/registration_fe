@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -16,6 +16,7 @@ interface UserInfo {
 export default function UserInfo() {
   const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUserInfo = async () => {
@@ -42,6 +43,19 @@ export default function UserInfo() {
     fetchUserInfo();
   }, []);
 
+  const handleLogout = async () => {
+    try {
+      await axiosInstance.post('/user/logout');
+      localStorage.removeItem('refreshToken');
+      navigate('/login');
+    }
+    catch (error) {
+      const errorMessage = axios.isAxiosError(error) && error.response?.data?.message 
+        ? error.response.data.message 
+        : 'Failed to logout. Please try again.';
+      toast.error(errorMessage);
+    }
+  };
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background to-muted p-4">
       <Card className="w-full max-w-md">
@@ -83,11 +97,9 @@ export default function UserInfo() {
             </div>
           )}
           <div className="pt-4">
-            <Link to="/" className="block">
-              <Button variant="outline" className="w-full">
-                ← Back to Home
+              <Button variant="outline" className="w-full" onClick={handleLogout}>
+                Logout
               </Button>
-            </Link>
           </div>
         </CardContent>
       </Card>
